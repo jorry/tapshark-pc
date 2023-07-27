@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
+        <meta name="author" content=""/>
+        <meta name="keywords" content=""/>
+        <meta name="description" content=""/>
+        <title>E-Card</title>
+        <link rel="stylesheet" href="./css/index.css?v=1.2">
+        <script src="./js/fontSize.js"></script>
+        <script src="./js/jquery-3.4.1.min.js"></script>
+        <script src="./js/cookies.min.js"></script>
+    </head>
+
+    <body>
+        
+        <div class="wap-cont login-cont">
+            <h1>E-Card</h1>
+            <p>E-Mail</p>
+            <input class="login-email" type="email">
+            <span class="email-tips"></span>
+            <p>Password</p>
+            <div class="pwd-box">
+                <input class="login-pwd" type="password">
+                <img class="pwd-btn" src="./imgs/icon-pwd@2x.png" alt="">
+            </div>
+            <span class="pwd-tips"></span>
+            <div class="login-btn">Login</div>
+            <a class="create-btn" href="./register.html">Create an account</a>
+            <a class="forget-btn" href="./forget.html">Forgot password?</a>
+            <!-- <a class="forget-btn" href="./policy.html">Forgot password?</a> -->
+
+            <p>By continuing you agree to our <a href="./tc.html">T&Cs.</a>Please also check out our <a href="./policy.html">Privacy Policy.</a></p></p>
+
+        </div>
+
+
+        <script src="./js/toast.js"></script>
+        <script src="./js/common.js?v=1.0"></script>
+        <script src="./js/md5.js"></script>
+        <script>
+            $(function(){
+                
+                // init();
+                let pwdOnoff = false;
+                // 密码切换
+                $('.pwd-btn').click(function(){
+                    if(!pwdOnoff){
+                        $('.login-pwd').attr('type','text');
+                        pwdOnoff = true;
+                    }else{
+                        $('.login-pwd').attr('type','password');
+                        pwdOnoff = false;
+                    }
+                });
+
+                $('.login-email').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.email-tips').hide();
+                });
+                $('.login-pwd').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.pwd-tips').hide();
+                });
+                // 登录提交
+                $('.login-btn').click(function(){
+                    var email = $('.login-email').val(),
+                        pwd = $('.login-pwd').val();
+                    if( !$.trim(email) ){
+                        $('.login-email').addClass('border-error');
+                        $('.email-tips').text('Email cannot be empty').show();
+                        return
+                    }else{
+                        $('.login-email').removeClass('border-error');
+                        $('.email-tips').text('').hide();
+                    }
+                    if( !$.trim(pwd) ){
+                        $('.login-pwd').addClass('border-error');
+                        $('.pwd-tips').text('Password cannot be empty').show();
+                        return
+                    }else if( $.trim(pwd).length<8 ){
+                        $('.login-pwd').addClass('border-error');
+                        $('.pwd-tips').text('Password cannot be less than 8 digits').show();
+                        return
+                    }else{
+                        $('.login-pwd').removeClass('border-error');
+                        $('.pwd-tips').text('').hide();
+                    }
+                    
+                    const bodydata = {
+                        'email': email,
+                        'password': md5($.trim(pwd))
+                    };
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + 'ecard/userLogin',
+                        xhrFields: {
+                             withCredentials: true
+                        },
+                        // crossDomain: true,
+                        data: {'body': bodydata },
+                        success : function(res) {
+                            console.log(res);
+                            if(res.code == 1){
+                                localStorage.setItem('emailAddress',email);
+                                location.href = './cardList.html?random='+Math.random();
+                            }else{
+                                toast(res.msg);
+                                return
+                            }
+                        },
+                        error : function(msg) {
+                            toast(msg);
+                            return
+                        },
+                        dataType : 'json'
+                    });
+                });
+
+
+                // function init(){
+                //     if(Cookies.get('session_id')){
+                //         if(sessionStorage.getItem('card_num')){
+                //             const card_num = sessionStorage.getItem('card_num');
+                //             const session_id = Cookies.get('session_id');
+                //             $.ajax({
+                //                 type : 'post',
+                //                 url : ajaxurl + 'ecard/selectCardPersonalInfo',
+                //                 data: {'body': {'card_num': card_num,'session_id': session_id} },
+                //                 success : function(res) {
+                //                     if(res.code == 1){
+                //                         location.href = './info.html?card_num='+card_num;
+                //                     }else if(res.code == 0){
+                //                         location.href = './userInfo.html?card_num='+card_num;
+                //                     }else{
+                //                         // toast(res.msg);
+                //                         location.href = './cardList.html';
+                //                         return
+                //                     }
+                //                 },
+                //                 error : function(msg) {
+                //                     console.log(msg);
+                //                     location.href = './cardList.html';
+                //                     return
+                //                 },
+                //                 dataType : 'json'
+                //             });
+                //         }else{
+                //             location.href = './cardList.html';
+                //         }
+                //     }else{
+                        if(localStorage.getItem('emailAddress')){
+                            localStorage.removeItem('emailAddress');
+                        }
+                //     }
+                // };
+            })
+
+        </script>
+        
+    </body>
+
+</html>

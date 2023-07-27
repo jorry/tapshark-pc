@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
+        <meta name="author" content=""/>
+        <meta name="keywords" content=""/>
+        <meta name="description" content=""/>
+        <title>E-Card</title>
+        <link rel="stylesheet" href="./css/index.css?v=1.2">
+        <script src="./js/fontSize.js"></script>
+        <script src="./js/jquery-3.4.1.min.js"></script>
+        <script src="./js/cookies.min.js"></script>
+    </head>
+
+    <body>
+        
+        <div class="wap-cont reset-cont">
+            <h2>Reset Password</h2>
+            <p>E-Mail</p>
+            <input class="reset-email" type="email" placeholder="Please enter">
+            <span class="email-tips"></span>
+            <p>New Password</p>
+            <input class="new-pwd" type="password" placeholder="Please enter">
+            <span class="pwd-tips"></span>
+            <p>Confirm Password</p>
+            <input class="comfirm-pwd" type="password" placeholder="Please enter">
+            <span class="cfm-tips"></span>
+            <div class="reset-btn">Login</div>
+        </div>
+
+
+        <script src="./js/toast.js"></script>
+        <script src="./js/common.js?v=1.0"></script>
+        <script src="./js/md5.js"></script>
+        <script>
+            $(function(){
+                init();
+                $('.reset-email').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.email-tips').hide();
+                });
+                $('.new-pwd').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.pwd-tips').hide();
+                });
+                $('.comfirm-pwd').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.cfm-tips').hide();
+                });
+                
+                // 重置密码
+                $('.reset-btn').click(function(){
+                    var email = $('.reset-email').val(),
+                        pwd = $('.new-pwd').val(),
+                        cfm = $('.comfirm-pwd').val();
+                    
+                    if( !$.trim(email) ){
+                        $('.reset-email').addClass('border-error');
+                        $('.email-tips').text('Email cannot be empty').show();
+                        return
+                    }else{
+                        $('.reset-email').removeClass('border-error');
+                        $('.email-tips').text('').hide();
+                    }
+                    if( !$.trim(pwd) ){
+                        $('.new-pwd').addClass('border-error');
+                        $('.pwd-tips').text('Password cannot be empty').show();
+                        return
+                    }else if( $.trim(pwd).length<8 ){
+                        $('.new-pwd').addClass('border-error');
+                        $('.pwd-tips').text('Password cannot be less than 8 digits').show();
+                        return
+                    }else{
+                        $('.new-pwd').removeClass('border-error');
+                        $('.pwd-tips').text('').hide();
+                    }
+                    if( $.trim(cfm) !== $.trim(pwd) ){
+                        $('.comfirm-pwd').addClass('border-error');
+                        $('.cfm-tips').text('The two passwords do not match').show();
+                        return
+                    }else{
+                        $('.comfirm-pwd').removeClass('border-error');
+                        $('.cfm-tips').text('').hide();
+                    }
+
+                    const bodydata = {
+                        'email': email,
+                        'password': md5($.trim(pwd))
+                    };
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + 'ecard/resetPassword',
+                        data: { 'body': bodydata },
+                        success : function(res) {
+                            // console.log(res);
+                            if(res.code == 1){
+                                localStorage.setItem('emailAddress',email);
+                                window.location.href = './cardList.html';
+                            }else{
+                                toast(res.msg);
+                                return
+                            }
+                        },
+                        error : function(msg) {
+                            toast(msg.msg);
+                            return
+                            console.log(msg);
+                        },
+                        dataType : 'json'
+                    });
+                });
+
+
+                function init(){
+                    // if(Cookies.get('session_id')){
+                    //     location.href = './cardList.html';
+                    // }
+                    const resetToken = getQueryString('resetToken');
+                    const email = getQueryString('email');
+                    const bodydata = {
+                        'resetToken': resetToken.substring(11),
+                        'email': email
+                    };
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + 'ecard/checkTokenTimeOut',
+                        data: { 'body': bodydata },
+                        success : function(res) {
+                            // console.log(res);
+                            if(res.code == 1){
+                                localStorage.removeItem('emailAddress');
+                            }else{
+                                toast(res.msg);
+                                return
+                            }
+                        },
+                        error : function(msg) {
+                            toast('网络请求错误');
+                            return
+                            console.log(msg);
+                        },
+                        dataType : 'json'
+                    });
+                }
+            })
+
+        </script>
+        
+    </body>
+
+</html>

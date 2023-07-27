@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
+        <meta name="author" content=""/>
+        <meta name="keywords" content=""/>
+        <meta name="description" content=""/>
+        <title>E-Card Information Shipping</title>
+        <link rel="stylesheet" href="./css/index.css?v=1.2">
+        <script src="./js/fontSize.js"></script>
+        <script src="./js/jquery-3.4.1.min.js"></script>
+        <script src="./js/cookies.min.js"></script>
+    </head>
+
+    <body>
+        
+        <div class="wap-cont address-cont">
+            <div class="confirm-path">Cart > Information > <span>Shipping</span></div>
+
+            <!-- <p>E-Mail(Required)</p> -->
+            <input class="address-email" type="email" placeholder="" style="display: none;">
+            <span class="email-tips"></span>
+            <p>Country</p>
+            <select class="country-select">
+                <option value="United states" selected>United states</option>
+            </select>
+            <p>VAT number inc Country Code</p>
+            <input class="address-number" type="text" placeholder="">
+            <p>First name(Required)</p>
+            <input class="address-first" type="text" placeholder="">
+            <span class="first-tips"></span>
+            <p>Last name(Required)</p>
+            <input class="address-last" type="text" placeholder="">
+            <span class="last-tips"></span>
+            <p>Company(optional)</p>
+            <input class="address-company" type="text" placeholder="">
+            <p>Full address(Required)</p>
+            <input class="address-full" type="text" placeholder="">
+            <span class="full-tips"></span>
+            <p>Address line2(Required)</p>
+            <input class="address-line" type="text" placeholder="">
+            <span class="line-tips"></span>
+            <p>City(Required)</p>
+            <input class="address-city" type="text" placeholder="">
+            <span class="city-tips"></span>
+            <p>State</p>
+            <!-- <div class="state-box">
+                <p class="state-text">North Dakota</p>
+                <ul class="state-list">
+                    <li value="North Dakota">North Dakota</li>
+                    <li value="Ohio">Ohio</li>
+                    <li value="Oklahoma">Oklahoma</li>
+                    <li value="Oregon">Oregon</li>
+                    <li value="Pennsylvania">Pennsylvania</li>
+                    <li value="Rhode Island">Rhode Island</li>
+                    <li value="South Carolina">South Carolina</li>
+                    <li value="South Dakota">South Dakota</li>
+                    <li value="Tennessee">Tennessee</li>
+                    <li value="Texas">Texas</li>
+                    <li value="Utah">Utah</li>
+                    <li value="Vermont">Vermont</li>
+                    <li value="Virginia">Virginia</li>
+                    <li value="Washington">Washington</li>
+                    <li value="West Virginia">West Virginia</li>
+                    <li value="Wisconsin">Wisconsin</li>
+                    <li value="Wyoming">Wyoming</li>
+                    <li value="Puerto Rico">Puerto Rico</li>
+                    <li value="U.S. Virgin Islands">U.S. Virgin Islands</li>
+                    <li value="Northern Mariana Islands">Northern Mariana Islands</li>
+                    <li value="Armed Forces Pacific">Armed Forces Pacific</li>
+                    <li value="Armed Forces Europe">Armed Forces Europe</li>
+                    <li value="Armed Forces Africa">Armed Forces Africa</li>
+                </ul>
+            </div> -->
+            <select class="state-select">
+                <option value="North Dakota">North Dakota</option>
+                <option value="Ohio">Ohio</option>
+                <option value="Oklahoma">Oklahoma</option>
+                <option value="Oregon">Oregon</option>
+                <option value="Pennsylvania">Pennsylvania</option>
+                <option value="Rhode Island">Rhode Island</option>
+                <option value="South Carolina">South Carolina</option>
+                <option value="South Dakota">South Dakota</option>
+                <option value="Tennessee">Tennessee</option>
+                <option value="Texas">Texas</option>
+                <option value="Utah">Utah</option>
+                <option value="Vermont">Vermont</option>
+                <option value="Virginia">Virginia</option>
+                <option value="Washington">Washington</option>
+                <option value="West Virginia">West Virginia</option>
+                <option value="Wisconsin">Wisconsin</option>
+                <option value="Wyoming">Wyoming</option>
+                <option value="Puerto Rico">Puerto Rico</option>
+                <option value="U.S. Virgin Islands">U.S. Virgin Islands</option>
+                <option value="Northern Mariana Islands">Northern Mariana Islands</option>
+                <option value="Armed Forces Pacific">Armed Forces Pacific</option>
+                <option value="Armed Forces Europe">Armed Forces Europe</option>
+                <option value="Armed Forces Africa">Armed Forces Africa</option>
+            </select>
+            <p>Zip code(Required)</p>
+            <input class="address-zip" type="text" placeholder="">
+            <span class="zip-tips"></span>
+            <p>Phone number for design updates(Required)</p>
+            <input class="address-phone" type="text" placeholder="">
+            <span class="phone-tips"></span>
+
+            <div class="address-btn">Continue to shipping</div>
+        </div>
+
+        <script src="./js/toast.js"></script>
+        <script>
+            $(function(){
+
+                init();
+
+                function init(){
+                    const session_id = Cookies.get('session_id');
+                    if(!session_id){
+                        location.href = './login.html';
+                    }
+                };
+
+                // $('.address-email').on('input propertychange',function(){
+                //     $(this).removeClass('border-error');
+                //     $('.email-tips').hide();
+                // });
+                $('.address-first').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.first-tips').hide();
+                });
+                $('.address-last').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.last-tips').hide();
+                });
+                $('.address-full').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.full-tips').hide();
+                });
+                $('.address-line').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.line-tips').hide();
+                });
+                $('.address-city').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.city-tips').hide();
+                });
+                $('.address-zip').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.zip-tips').hide();
+                });
+                $('.address-phone').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.phone-tips').hide();
+                });
+                
+                $('.address-btn').click(function(){
+                    const session_id = Cookies.get('session_id');
+                    if(!session_id){
+                        location.href = './login.html';
+                    }
+
+                    const email = $('.address-email').val(),
+                          first = $('.address-first').val(),
+                          last = $('.address-last').val(),
+                          full = $('.address-full').val(),
+                          line = $('.address-line').val(),
+                          city = $('.address-city').val(),
+                          zip = $('.address-zip').val(),
+                          phone = $('.address-phone').val();
+
+                    // if( !$.trim(email) ){
+                    //     $('.address-email').addClass('border-error');
+                    //     $('.email-tips').text('Email cannot be empty');
+                    //     return
+                    // }else{
+                    //     $('.address-email').removeClass('border-error');
+                    //     $('.email-tips').text('');
+                    // }
+                    if( !$.trim(first) ){
+                        $('.address-first').addClass('border-error');
+                        $('.first-tips').text('First name cannot be empty').show();
+                        return
+                    }else{
+                        $('.address-first').removeClass('border-error');
+                        $('.first-tips').text('');
+                    }
+                    if( !$.trim(last) ){
+                        $('.address-last').addClass('border-error');
+                        $('.last-tips').text('Last name cannot be empty').show();
+                        return
+                    }else{
+                        $('.address-last').removeClass('border-error');
+                        $('.last-tips').text('');
+                    }
+                    if( !$.trim(full) ){
+                        $('.address-full').addClass('border-error');
+                        $('.full-tips').text('Full address cannot be empty').show();
+                        return
+                    }else{
+                        $('.address-line').removeClass('border-error');
+                        $('.line-tips').text('');
+                    }
+                    if( !$.trim(line) ){
+                        $('.address-line').addClass('border-error');
+                        $('.line-tips').text('Address line2 cannot be empty').show();
+                        return
+                    }else{
+                        $('.address-line').removeClass('border-error');
+                        $('.line-tips').text('');
+                    }
+                    if( !$.trim(city) ){
+                        $('.address-city').addClass('border-error');
+                        $('.city-tips').text('City cannot be empty').show();
+                        return
+                    }else{
+                        $('.address-city').removeClass('border-error');
+                        $('.city-tips').text('');
+                    }
+                    if( !$.trim(zip) ){
+                        $('.address-zip').addClass('border-error');
+                        $('.zip-tips').text('Zip code cannot be empty').show();
+                        return
+                    }else{
+                        $('.address-zip').removeClass('border-error');
+                        $('.zip-tips').text('');
+                    }
+                    if( !$.trim(phone) ){
+                        $('.address-phone').addClass('border-error');
+                        $('.phone-tips').text('Phone number cannot be empty').show();
+                        return
+                    }else{
+                        $('.address-phone').removeClass('border-error');
+                        $('.phone-tips').text('');
+                    }
+
+                    let shippinAddress = {
+                        'first_name': $.trim(first),
+                        'last_name': $.trim(last),
+                        'company': $.trim($('.address-company').val()),
+                        'full_address': $.trim(full),
+                        'address_line': $.trim(line),
+                        'country': $.trim($('.country-select').val()),
+                        'city': $.trim(city),
+                        'state': $.trim($('.state-select').val()),
+                        'zip_code': $.trim(zip),
+                        'phone_number': $.trim(phone),
+                        'email': $.trim(email),
+                        'vat': $.trim($('.address-number').val())
+                    }
+                    localStorage.setItem('shipping_address',JSON.stringify(shippinAddress));
+                    window.location.href = './buy.html';
+                });
+            
+            })
+
+        </script>
+        
+    </body>
+
+</html>

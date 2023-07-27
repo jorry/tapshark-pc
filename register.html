@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
+        <meta name="author" content=""/>
+        <meta name="keywords" content=""/>
+        <meta name="description" content=""/>
+        <title>E-Card</title>
+        <link rel="stylesheet" href="./css/index.css?v=1.2">
+        <script src="./js/fontSize.js"></script>
+        <script src="./js/jquery-3.4.1.min.js"></script>
+        <script src="./js/cookies.min.js"></script>
+    </head>
+
+    <body>
+        
+        <div class="wap-cont register-cont">
+            <h1>E-Card</h1>
+            <p>Name</p>
+            <input class="register-name" type="text">
+            <span class="name-tips"></span>
+            <p>E-Mail</p>
+            <input class="register-email" type="email">
+            <span class="email-tips"></span>
+            <p>Password</p>
+            <input class="register-pwd" type="password">
+            <span class="pwd-tips"></span>
+            <p>Confirm Password</p>
+            <input class="comfirm-pwd" type="password">
+            <span class="cfm-tips"></span>
+            <div class="register-btn">Register</div>
+        </div>
+
+
+        <script src="./js/toast.js"></script>
+        <script src="./js/common.js?v=1.0"></script>
+        <script src="./js/md5.js"></script>
+        
+        <script>
+            $(function(){
+                // init();
+
+                $('.register-name').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.name-tips').hide();
+                });
+                $('.register-email').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.email-tips').hide();
+                });
+                $('.register-pwd').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.pwd-tips').hide();
+                });
+                $('.comfirm-pwd').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.cfm-tips').hide();
+                });
+
+                // 注册提交
+                $('.register-btn').click(function(){
+                    var name = $('.register-name').val(),
+                        email = $('.register-email').val(),
+                        pwd = $('.register-pwd').val(),
+                        cfm = $('.comfirm-pwd').val();
+                    if( !$.trim(name) ){
+                        $('.register-name').addClass('border-error');
+                        $('.name-tips').text('Name cannot be empty').show();
+                        return
+                    }else{
+                        $('.register-name').removeClass('border-error');
+                        $('.name-tips').text('').hide();
+                    }
+                    if( !$.trim(email) ){
+                        $('.register-email').addClass('border-error');
+                        $('.email-tips').text('Email cannot be empty').show();
+                        return
+                    }else{
+                        $('.register-email').removeClass('border-error');
+                        $('.email-tips').text('').hide();
+                    }
+                    if( !$.trim(pwd) ){
+                        $('.register-pwd').addClass('border-error');
+                        $('.pwd-tips').text('Password cannot be empty').show();
+                        return
+                    }else if( $.trim(pwd).length<8 ){
+                        $('.register-pwd').addClass('border-error');
+                        $('.pwd-tips').text('Password cannot be less than 8 digits').show();
+                        return
+                    }else{
+                        $('.register-pwd').removeClass('border-error');
+                        $('.pwd-tips').text('').hide();
+                    }
+                    if( $.trim(cfm) !== $.trim(pwd) ){
+                        $('.comfirm-pwd').addClass('border-error');
+                        $('.cfm-tips').text('The two passwords do not match').show();
+                        return
+                    }else{
+                        $('.comfirm-pwd').removeClass('border-error');
+                        $('.cfm-tips').text('').hide();
+                    }
+
+                    const bodydata = {
+                        'ename': name,
+                        'email': email,
+                        'password': md5($.trim(pwd)),
+                        'confirmPassword': md5($.trim(cfm))
+                    };
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + 'ecard/register',
+                        data: { 'body': bodydata },
+                        xhrFields: {
+                             withCredentials: true
+                        },
+                        crossDomain: true,
+                        success : function(res) {
+                            // console.log(res);
+                            if(res.code == 1){
+                                localStorage.setItem('emailAddress',email);
+                                window.location.href = './cardList.html';
+                            }else{
+                                toast(res.msg);
+                                return
+                            }
+                        },
+                        error : function(msg) {
+                            toast(msg);
+                            return
+                            console.log(msg);
+                        },
+                        dataType : 'json'
+                    });
+
+                });
+
+                function init(){
+                    if(Cookies.get('session_id')){
+                        if(sessionStorage.getItem('card_num')){
+                            const card_num = sessionStorage.getItem('card_num');
+                            const session_id = Cookies.get('session_id');
+                            $.ajax({
+                                type : 'get',
+                                url : ajaxurl + 'ecard/selectCardPersonalInfo',
+                                data: {'body': {'card_num': card_num,'session_id': session_id} },
+                                success : function(res) {
+                                    if(res.code == 1){
+                                        location.href = './info.html?card_num='+card_num;
+                                    }else if(res.code == 0){
+                                        location.href = './userInfo.html?card_num='+card_num;
+                                    }else{
+                                        location.href = './cardList.html';
+                                    }
+                                },
+                                error : function(msg) {
+                                    console.log(msg);
+                                    location.href = './cardList.html';
+                                    return
+                                },
+                                dataType : 'json'
+                            });
+                        }else{
+                            location.href = './cardList.html';
+                        }
+                    }
+                };
+
+
+            })
+
+        </script>
+        
+    </body>
+
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
+        <meta name="author" content=""/>
+        <meta name="keywords" content=""/>
+        <meta name="description" content=""/>
+        <title>E-Card</title>
+        <link rel="stylesheet" href="./css/index.css?v=1.2">
+        <script src="./js/fontSize.js"></script>
+        <script src="./js/jquery-3.4.1.min.js"></script>
+        <script src="./js/cookies.min.js"></script>
+    </head>
+
+    <body>
+        
+        <div class="wap-cont card-cont">
+            <div class="no-cards">
+                <img src="./imgs/icon-add@2x.png" alt="">
+                <p>Add a new card</p>
+            </div>
+            <div class="cards-box">
+                <div class="user-info" style="display: none;">
+                    <img src="./imgs/icon-person@2x.png" alt="">
+                </div>
+                <h1 class="card-tit">Master card</h1>
+                <ul class="card-list">
+                    <!-- <li>
+                        <img class="card-bg" src="./imgs/wap-hlgl-act@2x.png" alt="">
+                        <span class="card-name">Lili</span>
+                        <img class="card-icon" src="./imgs/icon-nfc.png" alt="">
+                        <img class="company-logo" src="./imgs/tit-search@2x.png" alt="">
+                        <img class="other-logo" src="./imgs/wap-icon-note.png" alt="">
+                    </li> -->
+                </ul>
+                <div class="card-addbtn">+ New Card</div>
+            </div>
+        </div>
+
+
+        <script src="./js/toast.js"></script>
+        <script src="./js/common.js?v=1.0"></script>
+        <script>
+            $(function(){
+                init();
+                // getCards();
+
+                // add
+                $('.no-cards,.card-addbtn').click(function(){
+                    window.location.href = './chose.html';
+                });
+                
+                // 查询用户是否登录
+                function init(){
+                    if(!Cookies.get('session_id')){
+                        location.href = './login.html';
+                    }else{
+                        getCards();
+                    }
+                };
+
+                function getCards(){
+                    const email = localStorage.getItem('emailAddress');
+                    const bodydata = {
+                        'email': email,
+                        'session_id': Cookies.get('session_id')
+                    };
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + 'ecard/userMainCardPage',
+                        data: { 'body': bodydata },
+                        success : function(res) {
+                            if(res.code == 1){
+                                // console.log(res);
+                                if(res.body&&res.body.length>0){
+                                    dealHtml(res.body);
+                                }else if(res.code==401){
+                                    location.href = './login.html';
+                                }else{
+                                    $('.no-cards').show();
+                                    $('.cards-box').hide();
+                                }
+                            }else{
+                                $('.no-cards').show();
+                                $('.cards-box').hide();
+                                toast(res.msg);
+                                return
+                            }
+                        },
+                        error : function(msg) {
+                            if(status == 401){
+                                location.href = './login.html';
+                            }
+                            toast('Server error');
+                            console.log(msg);
+                            $('.no-cards').show();
+                            $('.cards-box').hide();
+                            return
+                            
+                        },
+                        dataType : 'json'
+                    });
+                };
+                    
+                function dealHtml(datas){
+                    let cardhtml = '';
+                    for(let i=0;i<datas.length;i++){
+                        cardhtml += '<li class="card-item" data-num="'+datas[i].card_num+'">'+
+                                        '<img class="card-bg" src="'+datas[i].card_material_url+'" alt="">'+
+                                        '<span class="card-name" style="color: '+ datas[i].font_color +'">'+datas[i].user_name+'</span>'+
+                                        // '<img class="card-icon" src="./imgs/icon-nfc.png" alt="">'+
+                                        '<img class="company-logo" src="'+datas[i].company_logo+'" alt="">'+
+                                        '<img class="other-logo" src="'+datas[i].user_logo+'" alt="">'+
+                                    '</li>';
+                    };
+                    $('.card-list').html(cardhtml);
+                    $('.no-cards').hide();
+                    $('.cards-box').show();
+                };
+
+                $(document).on('click','.card-item',function(){
+                    const session_id = Cookies.get('session_id');
+                    const card_num = $(this).attr('data-num');
+                  
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + 'ecard/selectCardPersonalInfo',
+                        data: {'body': {'card_num': card_num,'session_id': session_id} },
+                        success : function(res) {
+                            if(res.code == 1){
+                                location.href = './info.html?card_num='+card_num;
+                            }else if(res.code == 0){
+                                location.href = './userInfo.html?card_num='+card_num;
+                            }else{
+                                toast(res.msg);
+                                return
+                            }
+                        },
+                        error : function(msg) {
+                            toast(msg);
+                            return
+                        },
+                        dataType : 'json'
+                    });
+                });
+            
+            });
+
+        </script>
+        
+    </body>
+
+</html>

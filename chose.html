@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
+        <meta name="author" content=""/>
+        <meta name="keywords" content=""/>
+        <meta name="description" content=""/>
+        <title>E-Card</title>
+        <link rel="stylesheet" href="./css/index.css?v=1.2">
+        <script src="./js/fontSize.js"></script>
+        <script src="./js/jquery-3.4.1.min.js"></script>
+        <script src="./js/cookies.min.js"></script>
+    </head>
+
+    <body>
+        
+        <div class="wap-cont chose-cont">
+            <div class="chose-card">
+                <img class="card-bg" src="" alt="">
+                <span class="card-name"></span>
+                <!-- <img class="card-icon" src="./imgs/icon-nfc.png" alt=""> -->
+                <img class="company-logo" src="" alt="">
+                <img class="other-logo" src="" alt="">
+            </div>
+            <div class="upload-box">
+                <h3>卡片材质</h3>
+                <ul class="upload-bgimg flex-albetween">
+                    <li>
+                        <img src="http://tapshark.co/image/lanse.png" alt="">
+                    </li>
+                    <li>
+                        <img src="http://tapshark.co/image/heise.png" alt="">
+                    </li>
+                    <li>
+                        <img src="http://tapshark.co/image/yinse.png" alt="">
+                    </li>
+                </ul>
+                <h3>User name</h3>
+                <input class="chose-name" type="text" placeholder="" >
+                <h3>Company logo</h3>
+                <div class="upload-company flex-center">
+                    <div class="add-box">
+                        <img src="./imgs/icon-add@2x.png" alt="">
+                        <p>Upload</p>
+                    </div>
+                    <img class="company-img" src="" alt="">
+                    <input type="file" class="company-submit" >
+                </div>
+                <h3>Card logo</h3>
+                <div class="upload-other flex-center">
+                    <div class="add-box">
+                        <img src="./imgs/icon-add@2x.png" alt="">
+                        <p>Upload</p>
+                    </div>
+                    <img class="other-img" src="" alt="">
+                    <input type="file" class="other-submit" />
+                </div>
+            </div>
+
+            <div class="chose-btm flex-albetween">
+                <div class="num-box">
+                    <span class="num-reduce">-</span>
+                    <b class="nums">1</b>
+                    <span class="num-plus">+</span>
+                </div>
+                <div class="num-btn">加入购物车</div>
+            </div>
+        </div>
+
+
+        <script src="./js/toast.js"></script>
+        <script src="./js/common.js?v=1.0"></script>
+        <script>
+            $(function(){
+
+                init();
+
+                function init(){
+                    const session_id = Cookies.get('session_id');
+                    if(!session_id){
+                        location.href = './login.html?backUrl='+window.location.href;
+                    }
+                    initcard(0);
+                };
+
+                // card bg
+                $('.upload-bgimg>li').click(function(){
+                    initcard($(this).index());
+                });
+                function initcard(idx){
+                    const imgurl= $('.upload-bgimg>li').eq(idx).find('img').attr('src');
+                    $('.card-bg').attr('src',imgurl);
+                    if(idx==2){
+                        $('.card-name').css('color','black');
+                    }else{
+                        $('.card-name').css('color','white');
+                    }
+                    // if(localStorage.getItem('cardInfo')){
+                    //     // 删除以前的
+                    //     localStorage.removeItem('cardInfo');
+
+                        // 赋值以前的
+                        // const cardInfo = JSON.parse(localStorage.getItem('cardInfo'));
+                        // $('.card-bg').attr('src',cardInfo.card_material_url);
+                        // $('.card-name').text(cardInfo.card_name);
+                        // $('.company-logo').attr('src',cardInfo.company_logo);
+                        // $('.company-img').attr('src',cardInfo.company_logo).show();
+                        // $('.upload-company>.add-box').hide();
+                        // $('.other-logo').attr('src',cardInfo.small_logo);
+                        // $('.other-img').attr('src',cardInfo.small_logo).show();
+                        // $('.upload-other>.add-box').hide();
+                        // $('.nums').text(cardInfo.buy_count);
+                    // } 
+                };
+
+                // user name
+                $('.upload-box').on('input', ':text',function(){
+                    $('.card-name').text($.trim($('.chose-name').val()));
+                });
+                // company logo
+                $('.company-submit').on('change',function(event){
+                    uploadImg(event,1);
+                });
+                // other logo
+                $('.other-submit').on('change',function(event){
+                    uploadImg(event,2);
+                });
+
+                // upload
+                function uploadImg(event,idx){
+                    const files = event.target.files;
+                    const file = files[0];
+                    const filedata = new FormData();
+                    filedata.append('file', file);
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + 'ecard/upload/img',
+                        data: filedata,
+                        processData: false,
+                        contentType: false,
+                        success : function(res) {
+                            console.log(res);
+                            if(res.body){
+                                const logoimg = res.body.imgUrl;
+                                if(idx == 1){
+                                    $('.company-logo').attr('src',logoimg);
+                                    $('.company-img').attr('src',logoimg).show();
+                                    $('.upload-company>.add-box').hide();
+                                }else if(idx == 2){
+                                    $('.other-logo').attr('src',logoimg);
+                                    $('.other-img').attr('src',logoimg).show();
+                                    $('.upload-other>.add-box').hide();
+                                }
+                            }
+                        },
+                        error : function(msg) {
+                            console.log(msg);
+                            toast('Image upload failed!');
+                        },
+                        dataType : 'json'
+                    });
+                };
+                
+                // reduce
+                $('.num-reduce').click(function(){
+                    let num = Number($('.nums').text());
+                    if(num>1){
+                        num--; 
+                    }
+                    $('.nums').text(num);
+                });
+
+                // plus
+                $('.num-plus').click(function(){
+                    let num = Number($('.nums').text());
+                    num++; 
+                    $('.nums').text(num);
+                });
+
+                // 加入购物车
+                $('.num-btn').click(function(){
+                    const session_id = Cookies.get('session_id');
+                    // if(!session_id){
+                    //     location.href = './login.html';
+                    // }
+                    
+                    const username = $.trim($('.chose-name').val()),
+                    companyLogo = $('.company-logo').attr('src'),
+                    smallLogo = $('.other-logo').attr('src');
+                    if(!username){
+                        toast('User name cannot be empty');
+                        return
+                    }
+                    if(!companyLogo){
+                        toast('Company logo cannot be empty');
+                        return
+                    }
+                    // if(!smallLogo){
+                    //     toast('Other logo cannot be empty');
+                    //     return
+                    // }
+
+                    let cardData = {
+                        'card_material_url': $('.card-bg').attr('src'),
+                        'card_name': username,
+                        'company_logo': companyLogo,
+                        'small_logo': smallLogo,
+                        'buy_count': Number($('.nums').text()),
+                        'font_color': $('.card-name').css('color'),
+                    };
+                    localStorage.setItem('cardInfo',JSON.stringify(cardData));
+                    window.location.href = './confirm.html';
+                });
+
+            })
+        </script>
+        
+    </body>
+
+</html>

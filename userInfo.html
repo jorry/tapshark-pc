@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
+        <meta name="author" content=""/>
+        <meta name="keywords" content=""/>
+        <meta name="description" content=""/>
+        <title>E-Card</title>
+        <link rel="stylesheet" href="./css/animate.min.css">
+        <link rel="stylesheet" href="./css/mobiscroll.css">
+        <link rel="stylesheet" href="./css/mobiscroll_002.css">
+        <link rel="stylesheet" href="./css/index.css?v=1.2">
+        <script src="./js/fontSize.js"></script>
+        <script src="./js/jquery-3.4.1.min.js"></script>
+        <script src="./js/cookies.min.js"></script>
+    </head>
+
+    <body class="users-body">
+        <div class="users-main">
+            <div class="users-header">
+                <span class="users-theme">Theme</span>
+                <div class="users-head" data-url="">
+                    <img class="head-img" src="./imgs/bg-head@2x.png" alt="">
+                    <p class="head-tips">Add photos</p>
+                    <input type="file" id="upload-head" >
+                </div>
+            </div>
+            <div class="users-cont">
+                <div class="users-basic">
+                    <input type="text" class="users-nick" placeholder="Nick name">
+                    <input type="text" class="users-first" placeholder="First name">
+                    <input type="text" class="users-last" placeholder="Last name">
+                    <input type="text" class="users-company" placeholder="Company">
+                    <input type="text" class="users-role" placeholder="Role">
+                    <input type="text" class="users-job" placeholder="Job title">
+                </div>
+                <div class="users-box users-nums">
+                    <ul class="users-list nums-list"></ul>
+                    <div class="users-addbox nums-addbox" data-name="phone">
+                        <img class="item-add" src="./imgs/icon-plus@2x.png" alt="">
+                        <p>add phone</p>
+                    </div>
+                </div>
+                <div class="users-box users-email">
+                    <ul class="users-list email-list"></ul>
+                    <div class="email-addbox users-addbox" data-name="email">
+                        <img src="./imgs/icon-plus@2x.png" alt="">
+                        <p>add email</p>
+                    </div>
+                </div>
+                <div class="users-box users-url">
+                    <ul class="users-list url-list"></ul>
+                    <div class="address-addbox users-addbox" data-name="url">
+                        <img src="./imgs/icon-plus@2x.png" alt="">
+                        <p>add url</p>
+                    </div>
+                </div>
+                <div class="users-box users-address">
+                    <ul class="users-list address-list"></ul>
+                    <div class="address-addbox users-addbox" data-name="address">
+                        <img src="./imgs/icon-plus@2x.png" alt="">
+                        <p>add address</p>
+                    </div>
+                </div>
+                <div class="users-box users-birthday">
+                    <ul class="users-list birthday-list"></ul>
+                    <div class="birthday-addbox users-addbox" data-name="birthday">
+                        <img src="./imgs/icon-plus@2x.png" alt="">
+                        <p>add birthday</p>
+                    </div>
+                </div>
+                <div class="users-box users-date">
+                    <ul class="users-list date-list"></ul>
+                    <div class="date-addbox users-addbox" data-name="date">
+                        <img src="./imgs/icon-plus@2x.png" alt="">
+                        <p>add date</p>
+                    </div>
+                </div>
+                <div class="users-box users-social">
+                    <ul class="users-list social-list"></ul>
+                    <div class="social-addbox users-addbox" data-name="social">
+                        <img src="./imgs/icon-plus@2x.png" alt="">
+                        <p>add social profile</p>
+                    </div>
+                </div>
+                <div class="users-box users-instant">
+                    <ul class="users-list instant-list"></ul>
+                    <div class="instant-addbox users-addbox" data-name="instant">
+                        <img src="./imgs/icon-plus@2x.png" alt="">
+                        <p>add instant message</p>
+                    </div>
+                </div>
+            </div>
+            <div class="users-btn">Finish</div>
+        </div>
+
+        <div class="theme-shadow">
+            <div class="theme-tit">
+                <span class="theme-close">cancel</span>
+                <h3>Themes</h3>
+            </div>
+            <ul class="theme-list">
+                <li style="background-color: #316FFE;"></li>
+                <li style="background-color: #D50000;"></li>
+                <li style="background-color: #009545;"></li>
+                <li style="background-color: #1D1D26;"></li>
+                <li style="background-color: #FFFFFF;"></li>
+                <li style="background-color: #FEA231;"></li>
+                <li style="background-color: #873CF3;"></li>
+            </ul>
+        </div>
+        <div class="users-shadow">
+            <div class="shadow-cont">
+                <div class="shadow-tit">
+                    <span class="shadow-close">cancel</span>
+                    <h3>Labels</h3>
+                </div>
+                <ul class="labels-list"></ul>
+            </div>
+        </div>
+
+        <script src="./js/toast.js"></script>
+        <script src="./js/common.js?v=1.0"></script>
+        <!-- <script src="./js/vCardFormatter.js"></script>
+        <script src="./js/index.js"></script> -->
+        <!-- <script src="./js/datepicker.js"></script> -->
+        
+        <script src="./js/mobiscroll_002.js"></script>
+        <script src="./js/mobiscroll.js"></script>
+        <script>
+            $(function(){
+
+                const datas = {
+                    'phone': [
+                        {
+                            name: 'Cell',
+                            onoff: false
+                        },
+                        {
+                            name: 'Home',
+                            onoff: false
+                        },
+                    ],
+                    'instant': [
+                        {
+                            name: 'Teams',
+                            onoff: false
+                        },
+                        {
+                            name: 'Zoom',
+                            onoff: false
+                        },
+                        {
+                            name: 'WhatsApp',
+                            onoff: false
+                        },
+                        {
+                            name: 'Pinterest',
+                            onoff: false
+                        },
+                        {
+                            name: 'LINE',
+                            onoff: false
+                        },
+                        {
+                            name: 'Duolingo',
+                            onoff: false
+                        },
+                        {
+                            name: 'Discord',
+                            onoff: false
+                        },
+                        {
+                            name: 'Alibaba',
+                            onoff: false
+                        },
+                        {
+                            name: 'DingTalk',
+                            onoff: false
+                        },
+                        {
+                            name: 'Telegram',
+                            onoff: false
+                        },
+                        {
+                            name: 'WeChat',
+                            onoff: false
+                        },
+                    ],
+                    'social': [
+                        {
+                            name: 'Facebook',
+                            onoff: false
+                        },
+                        {
+                            name: 'Twitter',
+                            onoff: false
+                        },
+                        {
+                            name: 'Instagram',
+                            onoff: false
+                        },
+                        {
+                            name: 'LinkedIn',
+                            onoff: false
+                        },
+                    ],
+                };
+                let allDatas = null;
+
+                init();
+
+                // theme
+                $('.users-theme').click(function(){
+                    $('.theme-shadow').height('100%');
+                });
+                $('.theme-list>li').click(function(){
+                    $('.users-header').css('background-color',$(this).css('background-color'));
+                    $('.theme-shadow').height(0);
+                });
+                $('.theme-close').click(function(){
+                    $('.theme-shadow').height(0);
+                });
+                // upload headimg
+                $('#upload-head').on('change',function(event){
+                    uploadImg(event);
+                });
+                // upload
+                function uploadImg(event){
+                    const files = event.target.files;
+                    const file = files[0];
+                    const filedata = new FormData();
+                    filedata.append('file', file);
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + 'ecard/upload/img',
+                        data: filedata,
+                        processData: false,
+                        contentType: false,
+                        success : function(res) {
+                            if(res.body){
+                                $('.head-img').attr('src',res.body.imgUrl);
+                                $('.users-head').attr('data-url',res.body.imgUrl);
+                                $('.head-tips').css('opacity','0');
+                            }else{
+                                toast(res.msg);
+                            }
+                        },
+                        error : function(msg) {
+                            console.log(msg);
+                            toast('Image upload failed!');
+                        },
+                        dataType : 'json'
+                    });
+                };
+                
+                // add texts
+                $('.users-addbox').click(function(){
+                    let name = $(this).attr('data-name');
+                    addHtml(name,'');
+                });
+
+                // 打开添加项
+                $(document).on('click','.item-tit',function(){
+                    const name = $(this).closest('li').attr('data-name');
+                    const index = $(this).closest('li').index();
+                    if(name=='phone' || name=='instant' || name=='social'){
+                        const addDatas = datas[name];
+                        let isAll = false;
+                        for(let j=0;j<addDatas.length;j++){
+                            if(!addDatas[j].onoff){
+                                isAll = true;
+                                break;
+                            }
+                        };
+                        // console.log(addDatas);
+                        if(isAll){
+                            let lilabel = '';
+                            for(let j=0;j<addDatas.length;j++){
+                                lilabel += '<li>'+addDatas[j].name+'</li>';
+                            };
+                            $('.labels-list').html(lilabel);
+                            $('.users-shadow').attr('data-name',name).attr('data-index',index).height('100%');
+                        }
+                    }
+                });
+                // 选择添加项
+                $(document).on('click','.labels-list>li',function(){
+                    const index = $(this).closest('.users-shadow').attr('data-index');
+                    const name = $(this).closest('.users-shadow').attr('data-name');
+                    const itemText = $('.users-list[data-name='+name+']').find('li').eq(index).find('.item-text');
+                    const itemVal = $('.users-list[data-name='+name+']').find('li').eq(index).find('.item-val');
+                    const nowName = $(this).text();
+                    for(let j=0;j<datas[name].length;j++){
+                        if(datas[name][j].name == itemText.text()){
+                            datas[name][j].onoff = false;
+                        }
+                        if(datas[name][j].name == nowName){
+                            datas[name][j].onoff = true;
+                        }
+                    };
+                    itemText.text($(this).text());
+                    itemVal.attr('placeholder',$(this).text());
+                    $('.shadow-close').click();
+                });
+                // 删除已添加项
+                $(document).on('click','.item-del',function(){
+                    const itemli = $(this).closest('li');
+                    const name = itemli.attr('data-name');
+                    if(name=='phone' || name=='instant' || name=='social'){
+                        let addDatas = datas[name];
+                        for(let j=0;j<addDatas.length;j++){
+                            if(addDatas[j].name == itemli.find('.item-text').text()){
+                                addDatas[j].onoff = false;
+                            }
+                        };
+                    }
+                    if(itemli.closest('ul').length == 1){
+                        itemli.closest('ul').closest('.users-box').find('.users-addbox').show();
+                    }
+                    itemli.remove();
+                });
+                // 关闭选择项弹窗
+                $('.shadow-close').click(function(){
+                    $('.users-shadow').height(0);
+                    $('.labels-list').html('');
+                });
+
+                // 初始化日期组件
+                function dateInit(name){
+                    let opt={};
+                    opt.date = {preset : 'date'};
+                    opt.default = {
+                        theme: 'android-ics light', //皮肤样式
+                        display: 'modal', //显示方式
+                        mode: 'scroller', //日期选择模式
+                        dateFormat: 'yyyy/mm/dd',
+                        lang: 'zh',
+                        showNow: true,
+                        nowText: "今天",
+                        startYear: 1900, //开始年份
+                        endYear: (new Date).getFullYear() //结束年份
+                    };
+                    $('.users-'+name+' .item-val').mobiscroll($.extend(opt['date'], opt['default']));
+                    //获取当前的时间
+                    function today(){
+                        var today=new Date();
+                        var h=today.getFullYear();
+                        var m=today.getMonth()+1;
+                        var d=today.getDate();
+                        return h+"/"+m+"/"+d;
+                    };
+                    $('.users-'+name+' .item-val').val(today());
+                    // const opt={
+                    //     startY: 1990, //开始时间
+                    //     endY: (new Date).getFullYear(), //结束时间
+                    //     mPickerType: 1, 
+                    //     separator: '-' //日期分割符
+                    // }
+                    // $('.users-'+name+' .item-val').mPickDater(opt);
+                    // $('.users-'+name+' .item-val').val($('.users-'+name+' .item-val').val().substring(0,9));
+                };
+                
+                // finish
+                $('.users-btn').click(function(){
+                    const session_id = Cookies.get('session_id');
+                    if(!session_id){
+                        location.href = './login.html?backUrl='+window.location.href;
+                    }
+
+                    let phoneLi = $('.nums-list>li'),
+                        phoneArr = [];
+                    if(phoneLi.length == 0){
+                        toast('Phone cannot be empty');
+                        return
+                    }else{
+                        for(let i=0;i<phoneLi.length;i++){
+                            if($.trim(phoneLi.eq(i).find('.item-val').val())){
+                                let jsons = {
+                                    'key': phoneLi.eq(i).find('.item-text').text(),
+                                    'value': $.trim(phoneLi.eq(i).find('.item-val').val())
+                                };
+                                phoneArr.push(JSON.stringify(jsons));
+                            }
+                        };
+                        if(phoneArr.length == 0){
+                            toast('Phone cannot be empty');
+                            return
+                        }
+                    }
+                    if($('.email-list>li').length == 0){
+                        toast('Email cannot be empty');
+                        return
+                    }else{
+                        if(!$.trim($('.email-list>li').eq(0).find('.item-val').val())){
+                            toast('Email cannot be empty');
+                            return
+                        }
+                    }
+
+                    let postDatas = {
+                        session_id: session_id,
+                        card_num: getQueryString('card_num'),
+                        theme: $('.users-header').css('background-color'),
+                        phone: phoneArr.join('*'),
+                        email: $.trim($('.email-list>li').eq(0).find('.item-val').val()),
+                    };
+                    // photo_url
+                    if($.trim($('.users-head').attr('data-url'))){
+                        postDatas.photo_url = $.trim($('.users-head').attr('data-url'));
+                    }
+                    // nick_name
+                    if($.trim($('.users-nick').val())){
+                        postDatas.nick_name = $.trim($('.users-nick').val());
+                    }
+                    // first_name
+                    if($.trim($('.users-first').val())){
+                        postDatas.first_name = $.trim($('.users-first').val());
+                    }
+                    // last_name
+                    if($.trim($('.users-last').val())){
+                        postDatas.last_name = $.trim($('.users-last').val());
+                    }
+                    // company
+                    if($.trim($('.users-company').val())){
+                        postDatas.company = $.trim($('.users-company').val());
+                    }
+                    // role
+                    if($.trim($('.users-role').val())){
+                        postDatas.role = $.trim($('.users-role').val());
+                    }
+                    // job_title
+                    if($.trim($('.users-job').val())){
+                        postDatas.job_title = $.trim($('.users-job').val());
+                    }
+                    // url
+                    if($('.url-list>li').length>0 && $.trim($('.url-list>li').eq(0).find('.item-val').val())){
+                        postDatas.url = $.trim($('.url-list>li').eq(0).find('.item-val').val());
+                    }
+                    // address
+                    if($('.address-list>li').length>0 && $.trim($('.address-list>li').eq(0).find('.item-val').val())){
+                        postDatas.address = $.trim($('.address-list>li').eq(0).find('.item-val').val());
+                    }
+                    // birthday
+                    if($('.birthday-list>li').length>0 && $.trim($('.birthday-list>li').eq(0).find('.item-val').val())){
+                        postDatas.birthday = $.trim($('.birthday-list>li').eq(0).find('.item-val').val());
+                    }
+                    // date
+                    if($('.date-list>li').length>0 && $.trim($('.date-list>li').eq(0).find('.item-val').val())){
+                        postDatas.date = $.trim($('.date-list>li').eq(0).find('.item-val').val());
+                    }
+                    // social_profile
+                    if($('.social-list>li').length>0){
+                        let socialArr = [], socialLi = $('.social-list>li');
+                        for(let i=0;i<socialLi.length;i++){
+                            const value = $.trim(socialLi.eq(i).find('.item-val').val());
+                            const name = $.trim(socialLi.eq(i).find('.item-text').text());
+                            if(value){
+                                socialArr.push(JSON.stringify({
+                                    name: name,
+                                    value: value
+                                }));
+                            }
+                        };
+                        if(socialArr.length>0){
+                            postDatas.social_profile = socialArr.join('*');
+                        }
+                    }
+                    // instant_message
+                    if($('.instant-list>li').length>0){
+                        let instantArr = [], instantLi = $('.instant-list>li');
+                        for(let i=0;i<instantLi.length;i++){
+                            const value = $.trim(instantLi.eq(i).find('.item-val').val());
+                            const name = $.trim(instantLi.eq(i).find('.item-text').text());
+                            if(value){
+                                instantArr.push(JSON.stringify({
+                                    name: name,
+                                    value: value
+                                }));
+                            }
+                        };
+                        if(instantArr.length>0){
+                            postDatas.instant_message = instantArr.join('*');
+                        }
+                    }
+                    
+                    // console.log(postDatas);
+                    if(!allDatas){ // 编辑
+                        submit(postDatas,'ecard/addCardPersonalInfo');
+                    }else{ // 新增
+                        postDatas.id = allDatas.id;
+                        submit(postDatas,'ecard/updateCardPersonalInfo');
+                    }
+                });
+                
+                function submit(postDatas,url){
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + url,
+                        data: {'body': postDatas },
+                        success : function(res) {
+                            if(res.code == 1){
+                                location.href = './info.html?card_num='+postDatas.card_num;
+                            }else{
+                                toast(res.msg);
+                                return
+                            }
+                        },
+                        error : function(msg) {
+                            toast(msg);
+                            return
+                        },
+                        dataType : 'json'
+                    });
+                };
+
+                function handleDatas(datas){
+                    let html = '', phone = [], social = [], instant = [];
+                    if(datas.phone && datas.phone!='undefined'){
+                        phone = datas.phone.split('*');
+                    }
+                    if(datas.social_profile && datas.social_profile!='undefined'){
+                        social = datas.social_profile.split('*');
+                    }
+                    if(datas.instant_message && datas.instant_message!='undefined'){
+                        instant = datas.instant_message.split('*');
+                    }
+                    
+                    addHtml('email',datas.email);
+                    for(let i=0;i<phone.length;i++){
+                        phone[i] = JSON.parse(phone[i]);
+                        addHtml('phone', phone[i].value, phone[i].key);
+                    };
+                    if(social.length>0){
+                        for(let i=0;i<social.length;i++){
+                            social[i] = JSON.parse(social[i]);
+                            addHtml('social', social[i].value, social[i].name);
+                        };
+                    }
+                    if(instant.length>0){
+                        for(let i=0;i<instant.length;i++){
+                            instant[i] = JSON.parse(instant[i]);
+                            addHtml('instant', instant[i].value, instant[i].name);
+                        };
+                    }
+                    if(datas.theme && datas.theme!='undefined'){
+                        $('.users-header').css('background-color',datas.theme);
+                    }
+                    if(datas.photo_url && datas.photo_url!='undefined'){
+                        $('.users-head').attr('data-url', datas.photo_url);
+                        $('.head-img').attr('src', datas.photo_url);
+                        $('.head-tips').css('opacity','0');
+                    }
+                    if(datas.nick_name && datas.nick_name!='undefined'){
+                        $('.users-nick').val(datas.nick_name);
+                    }
+                    if(datas.first_name && datas.first_name!='undefined'){
+                        $('.users-first').val(datas.first_name);
+                    }
+                    if(datas.last_name && datas.last_name!='undefined'){
+                        $('.users-last').val(datas.last_name);
+                    }
+                    if(datas.company && datas.company!='undefined'){
+                        $('.users-company').val(datas.company);
+                    }
+                    if(datas.role && datas.role!='undefined'){
+                        $('.users-role').val(datas.role);
+                    }
+                    if(datas.job_title && datas.job_title!='undefined'){
+                        $('.users-job').val(datas.job_title);
+                    }
+                    
+                    if(datas.url && datas.url!='undefined'){
+                        addHtml('url',datas.url);
+                    }
+                    if(datas.address && datas.address!='undefined'){
+                        addHtml('address',datas.address);
+                    }
+                    if(datas.birthday && datas.birthday!='undefined'){
+                        addHtml('birthday',datas.birthday);
+                    }
+                    if(datas.date && datas.date!='undefined'){
+                        addHtml('date',datas.date);
+                    }
+                    
+                };
+                
+                function addHtml(dataname,title,text){
+                    let name = dataname;
+                    const that = $('.users-addbox[data-name='+name+']');
+                    const userList = that.prev('.users-list');
+                    let nametext = name;
+                    let lihtml = '';
+                    userList.attr('data-name',name);
+                    if(name=='phone' || name=='instant' || name=='social'){
+                        const addDatas = datas[name];
+                        if(text){
+                            for(let j=0;j<addDatas.length;j++){
+                                if(addDatas[j].name == text){
+                                    nametext = addDatas[j].name;
+                                    addDatas[j].onoff = true;
+                                    break;
+                                }
+                            };
+                        }else{
+                            if(userList.find('li').length>0){
+                                for(let j=0;j<addDatas.length;j++){
+                                    if(!addDatas[j].onoff){
+                                        nametext = addDatas[j].name;
+                                        addDatas[j].onoff = true;
+                                        break;
+                                    }
+                                };
+                            }else{
+                                nametext = addDatas[0].name;
+                                addDatas[0].onoff = true;
+                            }
+                        }
+                        if(Number(userList.find('li').length)+1 == addDatas.length){
+                            that.hide();
+                        }
+                        lihtml = '<li class="users-item" data-name="'+name+'">'+
+                                        '<img class="item-del" src="./imgs/icon-reduce@2x.png" alt="">'+
+                                        '<div class="item-tit"><span class="item-text">'+nametext+'</span><img src="./imgs/icon-arr@2x.png" alt=""></div>'+
+                                        '<input class="item-val" type="text" placeholder="'+nametext+'" value="'+title+'">'+
+                                    '</li>';
+                        userList.append(lihtml);
+                    }else if(name=='birthday' || name == 'date'){
+                        that.hide();
+                        lihtml = '<li class="users-item" data-name="'+name+'">'+
+                                        '<img class="item-del" src="./imgs/icon-reduce@2x.png" alt="">'+
+                                        '<div class="item-tit"><span class="item-text">'+nametext+'</span><img src="./imgs/icon-arr@2x.png" alt=""></div>'+
+                                        '<input class="item-val" type="text" readonly placeholder="'+nametext+'" value="'+title+'">'+
+                                    '</li>';
+                        userList.append(lihtml);
+                        dateInit(name);
+                    }else{
+                        that.hide();
+                        lihtml = '<li class="users-item" data-name="'+name+'">'+
+                                        '<img class="item-del" src="./imgs/icon-reduce@2x.png" alt="">'+
+                                        '<div class="item-tit"><span class="item-text">'+nametext+'</span><img src="./imgs/icon-arr@2x.png" alt=""></div>'+
+                                        '<input class="item-val" type="text" placeholder="'+nametext+'" value="'+title+'">'+
+                                    '</li>';
+                        userList.append(lihtml);
+                    }
+                };
+
+                function init(){
+                    const card_num = getQueryString('card_num');
+                    const session_id = Cookies.get('session_id');
+                    if(!card_num || card_num==''){
+                        toast("No Card Numbers!");
+                        setTimeout(()=>{
+                            window.history.go(-1);
+                        },1000);
+                    }else{
+                        let bodydata = {
+                            session_id: session_id,
+                            card_num: card_num,
+                        };
+                        $.ajax({
+                            type : 'post',
+                            url : ajaxurl + 'ecard/selectCardPersonalInfo',
+                            data: {'body': bodydata},
+                            success : function(res) {
+                                // console.log(res);
+                                if(res.code == 1){
+                                    if(res.body && !$.isEmptyObject(res.body)){
+                                        allDatas = res.body;
+                                        handleDatas(allDatas);
+                                    }
+                                }else if(res.code == 401){
+                                    location.href = './login.html?backUrl='+window.location.href;
+                                }else{
+                                    // toast(res.msg);
+                                    return
+                                }
+                            },
+                            error : function(msg,status) {
+                                // if(status == 401){
+                                //     location.href = './login.html';
+                                // }
+                                // toast('Server error');
+                                return
+                            },
+                            dataType : 'json'
+                        });
+
+                    }
+                };
+
+            });
+
+        </script>
+        
+    </body>
+
+</html>

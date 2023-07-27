@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
+        <meta name="author" content=""/>
+        <meta name="keywords" content=""/>
+        <meta name="description" content=""/>
+        <title>E-Card</title>
+        <link rel="stylesheet" href="./css/index.css?v=1.2">
+        <script src="./js/fontSize.js"></script>
+        <script src="./js/jquery-3.4.1.min.js"></script>
+        <script src="./js/cookies.min.js"></script>
+    </head>
+
+    <body>
+        
+        <div class="wap-cont index-cont">
+            <p>Please waiting ...</p>
+        </div>
+
+
+        <script src="./js/toast.js"></script>
+        <script src="./js/common.js?v=1.0"></script>
+        <script src="./js/md5.js"></script>
+        <script>
+            $(function(){
+                init();
+                // http://47.92.215.156/index.html?userId=10086&cardNum=10000
+                
+                function init(){
+                    
+                    const userId = getQueryString('userId');
+                    const card_num = getQueryString('cardNum');
+                    sessionStorage.setItem('card_num',card_num);
+
+                    if(!Cookies.get('session_id') || Cookies.get('session_id')==''){
+                        location.href = './login.html';
+                    }
+
+                    const bodydata = {
+                        'userId': userId,
+                        'card_num': card_num,
+                        'session_id': Cookies.get('session_id')
+                    };
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + 'ecard/nfc',
+                        xhrFields: {
+                             withCredentials: true
+                        },
+                        data: { 'body': bodydata },
+                        success : function(res) {
+                            // console.log(res);
+                            if(res.code == 7){
+                                toast(res.msg);
+                                setTimeout(()=>{
+                                    window.location.href= './login.html';
+                                },1500);
+                            }else if(res.code == 8){
+                                toast(res.msg);
+                                setTimeout(()=>{
+                                    window.location.href= './register.html';
+                                },1500);
+                            }else if(res.code == 9){
+                                toast(res.msg);
+                                setTimeout(()=>{
+                                    window.location.href= './userInfo.html?card_num='+card_num;
+                                },1500);
+                            }else if(res.code == 10){
+                                window.location.href= './info.html?card_num='+card_num;
+                            }else{
+                                toast(res.msg);
+                                return
+                            }
+                        },
+                        error : function(msg,status) {
+                            console.log(status);
+                            toast('网络请求错误');
+                            return
+                            console.log(msg);
+                        },
+                        dataType : 'json'
+                    });
+                }
+            })
+
+        </script>
+        
+    </body>
+
+</html>

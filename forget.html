@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
+        <meta name="author" content=""/>
+        <meta name="keywords" content=""/>
+        <meta name="description" content=""/>
+        <title>E-Card</title>
+        <link rel="stylesheet" href="./css/index.css?v=1.2">
+        <script src="./js/fontSize.js"></script>
+        <script src="./js/jquery-3.4.1.min.js"></script>
+        <script src="./js/cookies.min.js"></script>
+    </head>
+
+    <body>
+        
+        <div class="wap-cont forget-cont">
+            <h2>Forgot password</h2>
+            <h2>We will email you a link to reset your password</h2>
+            <p>E-Mail</p>
+            <input class="forget-email" type="email">
+            <span class="forget-tips"></span>
+            <div class="send-btn">Send</div>
+        </div>
+
+        <script src="./js/toast.js"></script>
+        <script src="./js/common.js?v=1.0"></script>
+        <script>
+            $(function(){
+                // init();
+
+                $('.forget-email').on('input propertychange',function(){
+                    $(this).removeClass('border-error');
+                    $('.forget-tips').hide();
+                });
+                $('.send-btn').click(function(){
+                    const email = $('.forget-email').val();
+                    if( !$.trim(email) ){
+                        $('.forget-email').addClass('border-error');
+                        $('.forget-tips').text('Email cannot be empty').show();
+                        return
+                    }else{
+                        $('.forget-email').removeClass('border-error');
+                        $('.forget-tips').text('').hide();
+                    }
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + 'ecard/sendPasswordEmail',
+                        data: {'body': {'email': email} },
+                        success : function(res) {
+                            console.log(res);
+                            if(res.code == 1){
+                                $('.forget-tips').text(res.msg).show();
+                            }else{
+                                toast(res.msg);
+                                return
+                            }
+                        },
+                        error : function(msg) {
+                            toast(msg);
+                            return
+                        },
+                        dataType : 'json'
+                    });
+                });
+            
+                function init(){
+                    if(Cookies.get('session_id')){
+                        location.href = './cardList.html';
+                    }
+                };
+            })
+
+        </script>
+        
+    </body>
+
+</html>
