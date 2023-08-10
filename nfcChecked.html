@@ -40,9 +40,9 @@
                     const card_num = getQueryString('cardNum');
                     sessionStorage.setItem('card_num',card_num);
 
-                    if(!Cookies.get('session_id') || Cookies.get('session_id')==''){
-                        location.href = './login.html';
-                    }
+                    // if(!Cookies.get('session_id') || Cookies.get('session_id')==''){
+                    //     location.href = './login.html';
+                    // }
 
                     const bodydata = {
                         'userId': userId,
@@ -71,10 +71,10 @@
                             }else if(res.code == 9){
                                 toast(res.msg);
                                 setTimeout(()=>{
-                                    window.location.href= './userInfo.html?card_num='+card_num;
+                                    window.location.href= './userInfo.html?card_num='+card_num+'&userId='+userId;
                                 },1500);
                             }else if(res.code == 10){
-                                window.location.href= './info.html?card_num='+card_num;
+                                window.location.href= './info.html?card_num='+card_num+'&userId='+userId;
                             }else{
                                 toast(res.msg);
                                 return

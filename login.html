@@ -110,7 +110,18 @@
                             console.log(res);
                             if(res.code == 1){
                                 localStorage.setItem('emailAddress',email);
-                                location.href = './cardList.html?random='+Math.random();
+                                const userId = sessionStorage.getItem('userId');
+                                if(userId == email){
+                                    if(sessionStorage.getItem('backUrl')){
+                                        window.location.href = sessionStorage.getItem('backUrl');
+                                    }else{
+                                        window.history.pushState({}, '', '#');
+                                        window.location.href = './cardList.html?random='+Math.random();
+                                    }
+                                }else{
+                                    window.history.pushState({}, '', '#');
+                                    window.location.href = './cardList.html?random='+Math.random();
+                                }
                             }else{
                                 toast(res.msg);
                                 return

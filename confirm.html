@@ -23,13 +23,13 @@
         
         <div class="wap-cont confirm-cont">
             <div class="confirm-path">Cart > Information > <span>Shipping</span></div>
-            <div class="confirm-card">
+            <!-- <div class="confirm-card">
                 <img class="card-bg" src="./imgs/wap-hlgl-act@2x.png" alt="">
                 <span class="card-name">Lili</span>
                 <img class="card-icon" src="./imgs/icon-nfc.png" alt="">
                 <img class="company-logo" src="./imgs/tit-search@2x.png" alt="">
                 <img class="other-logo" src="./imgs/wap-icon-note.png" alt="">
-            </div>
+            </div> -->
             <div class="confirm-box">
                 <p>Email</p>
                 <input class="confirm-email" type="email" placeholder="" >
@@ -55,16 +55,16 @@
                         location.href = './login.html';
                     }
 
-                    const cardInfo = localStorage.getItem('cardInfo') || '';
-                    if(cardInfo){
-                        const cardData = JSON.parse(cardInfo);
-                        $('.card-bg').attr('src',cardData.card_material_url);
-                        $('.company-logo').attr('src',cardData.company_logo);
-                        $('.other-logo').attr('src',cardData.small_logo);
-                        $('.card-name').text(cardData.card_name);
-                    }else{
-                        window.history.go(-1);
-                    }
+                    // const cardInfo = localStorage.getItem('cardInfo') || '';
+                    // if(cardInfo){
+                    //     const cardData = JSON.parse(cardInfo);
+                    //     $('.card-bg').attr('src',cardData.card_material_url);
+                    //     $('.company-logo').attr('src',cardData.company_logo);
+                    //     $('.other-logo').attr('src',cardData.small_logo);
+                    //     $('.card-name').text(cardData.card_name);
+                    // }else{
+                    //     window.history.go(-1);
+                    // }
                 };
 
                 $('.confirm-btn').click(function(){
@@ -85,33 +85,31 @@
                         $('.code-tips').text('Disccount code cannot be empty').show();
                         return
                     }
+                    // const orderData = {
+                    //     'email' : email,
+                    //     'purchase_code': code
+                    // };
+                    // localStorage.setItem('orderInfo',JSON.stringify(orderData));
+                    // window.location.href = './address.html';
+                    checkCode(email,code);
+                });
+
+                function checkCode(email,code){
                     const orderData = {
                         'email' : email,
                         'purchase_code': code
                     };
-                    localStorage.setItem('orderInfo',JSON.stringify(orderData));
-                    window.location.href = './address.html';
-                    // checkCode(email,code);
-                });
-
-                function checkCode(email,code){
                     $.ajax({
                         type : 'post',
                         url : ajaxurl + 'ecard/checkDiscountCode',
-                        data: {'email': email, 'discountCode': code},
+                        data: orderData,
                         success : function(res) {
-                            console.log(res);
+                            // console.log(res);
                             if(res.code == 1){
-                                const orderData = {
-                                    'email' : email,
-                                    'purchase_code': code
-                                };
                                 localStorage.setItem('orderInfo',JSON.stringify(orderData));
-                            }else if(res.code == 0){
-                                toast('Invalid disccount code');
-                                return
-                            }else if(res.code == -1){
-                                toast('Server error');
+                                window.location.href = './chose.html?buyCount='+res.buyCount;
+                            }else{
+                                toast(res.msg);
                                 return
                             }
                         },

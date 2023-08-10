@@ -54,7 +54,7 @@
 
                 // add
                 $('.no-cards,.card-addbtn').click(function(){
-                    window.location.href = './chose.html';
+                    window.location.href = './confirm.html';
                 });
                 
                 // 查询用户是否登录
@@ -62,7 +62,11 @@
                     if(!Cookies.get('session_id')){
                         location.href = './login.html';
                     }else{
-                        getCards();
+                        if(sessionStorage.getItem('backUrl')){
+                            sessionStorage.removeItem('userId');
+                            sessionStorage.removeItem('backUrl');
+                        }
+                        getCards(); 
                     }
                 };
 
@@ -135,9 +139,9 @@
                         data: {'body': {'card_num': card_num,'session_id': session_id} },
                         success : function(res) {
                             if(res.code == 1){
-                                location.href = './info.html?card_num='+card_num;
+                                location.href = './info.html?card_num='+card_num+'&userId='+localStorage.getItem('emailAddress');
                             }else if(res.code == 0){
-                                location.href = './userInfo.html?card_num='+card_num;
+                                location.href = './userInfo.html?card_num='+card_num+'&userId='+localStorage.getItem('emailAddress');
                             }else{
                                 toast(res.msg);
                                 return

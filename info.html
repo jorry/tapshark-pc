@@ -33,7 +33,7 @@
 
 
         <script src="./js/toast.js"></script>
-        <script src="./js/common.js?v=1.0"></script>
+        <script src="./js/common.js?v=1.0"></script> 
         <script src="./js/vCardFormatter.js"></script>
         <script src="./js/index.js"></script>
 
@@ -45,8 +45,12 @@
 
                 function init(){
                     const session_id = Cookies.get('session_id');
-                    if(!session_id){
-                        location.href = './login.html?backUrl='+window.location.href;
+                    // if(!session_id){
+                    //     location.href = './login.html';
+                    // }
+                    if(sessionStorage.getItem('backUrl')){
+                        sessionStorage.removeItem('userId');
+                        sessionStorage.removeItem('backUrl');
                     }
                     if(!card_num || card_num==''){
                         toast("No Card Numbers!");
@@ -67,8 +71,6 @@
                             if(res.code == 1){
                                 handleHtml(res.body);
                                 $('.info-cont').show();
-                            }else if(res.code == 401){
-                                location.href = './login.html?backUrl='+window.location.href;
                             }else{
                                 toast(res.msg);
                                 return
@@ -222,8 +224,50 @@
 
                 // edit
                 $('.edit-btn').click(function(){
-                    location.href = './userInfo.html?card_num='+card_num;
+                    const session_id = Cookies.get('session_id');
+                    if(!session_id){
+                        sessionStorage.setItem('userId',getQueryString('userId'));
+                        sessionStorage.setItem('backUrl',window.location.href);
+                        window.location.href = './login.html';
+                    }else{
+                        if(getQueryString('userId')){
+                            checkUser();
+                        }else{
+                            window.location.href = './login.html';
+                        }
+                    }
                 });
+
+                function checkUser(){
+                    const userId = getQueryString('userId');
+                    const session_id = Cookies.get('session_id');
+                    let bodydata = {
+                        sessionId: session_id,
+                        email: userId,
+                    };
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + 'ecard/checkUser',
+                        data: {'body': bodydata},
+                        success : function(res) {
+                            if(res.code == 1){
+                                window.location.href = './userInfo.html?card_num='+card_num+'&userId='+getQueryString('userId');
+                            }else if(res.code == -1){
+                                sessionStorage.setItem('userId', getQueryString('userId'));
+                                sessionStorage.setItem('backUrl', window.location.href);
+                                window.location.href = './login.html';
+                            }else{
+                                toast(res.msg);
+                                return
+                            }
+                        },
+                        error : function(msg,status) {
+                            toast('Server error');
+                            return
+                        },
+                        dataType : 'json'
+                    });
+                }
 
                 // add to address book
                 $('.info-btn').click(function(){

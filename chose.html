@@ -79,15 +79,20 @@
         <script src="./js/common.js?v=1.0"></script>
         <script>
             $(function(){
+                const buyCount = parseInt(getQueryString('buyCount')) || 0;
 
                 init();
 
                 function init(){
                     const session_id = Cookies.get('session_id');
                     if(!session_id){
-                        location.href = './login.html?backUrl='+window.location.href;
+                        // location.href = './login.html';
                     }
-                    initcard(0);
+                    if(buyCount>0){
+                        initcard(0);
+                    }else{
+                        window.history.go(-1);
+                    }
                 };
 
                 // card bg
@@ -180,7 +185,11 @@
                 // plus
                 $('.num-plus').click(function(){
                     let num = Number($('.nums').text());
-                    num++; 
+                    if(num < buyCount){
+                        num++; 
+                    }else{
+                        num = buyCount;
+                    }
                     $('.nums').text(num);
                 });
 
@@ -216,7 +225,7 @@
                         'font_color': $('.card-name').css('color'),
                     };
                     localStorage.setItem('cardInfo',JSON.stringify(cardData));
-                    window.location.href = './confirm.html';
+                    window.location.href = './address.html';
                 });
 
             })

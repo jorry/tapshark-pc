@@ -372,7 +372,9 @@
                 $('.users-btn').click(function(){
                     const session_id = Cookies.get('session_id');
                     if(!session_id){
-                        location.href = './login.html?backUrl='+window.location.href;
+                        sessionStorage.setItem('backUrl',window.location.href);
+                        sessionStorage.setItem('userId',getQueryString('userId'));
+                        location.href = './login.html';
                     }
 
                     let phoneLi = $('.nums-list>li'),
@@ -655,47 +657,94 @@
                 function init(){
                     const card_num = getQueryString('card_num');
                     const session_id = Cookies.get('session_id');
+                    if(!session_id){
+                        sessionStorage.setItem('backUrl',window.location.href);
+                        sessionStorage.setItem('userId',getQueryString('userId'));
+                        location.href = './login.html';
+                        return
+                    }
+                    if(sessionStorage.getItem('backUrl')){
+                        sessionStorage.removeItem('backUrl');
+                        sessionStorage.removeItem('userId');
+                    }
                     if(!card_num || card_num==''){
                         toast("No Card Numbers!");
                         setTimeout(()=>{
                             window.history.go(-1);
                         },1000);
                     }else{
-                        let bodydata = {
-                            session_id: session_id,
-                            card_num: card_num,
-                        };
-                        $.ajax({
-                            type : 'post',
-                            url : ajaxurl + 'ecard/selectCardPersonalInfo',
-                            data: {'body': bodydata},
-                            success : function(res) {
-                                // console.log(res);
-                                if(res.code == 1){
-                                    if(res.body && !$.isEmptyObject(res.body)){
-                                        allDatas = res.body;
-                                        handleDatas(allDatas);
-                                    }
-                                }else if(res.code == 401){
-                                    location.href = './login.html?backUrl='+window.location.href;
-                                }else{
-                                    // toast(res.msg);
-                                    return
-                                }
-                            },
-                            error : function(msg,status) {
-                                // if(status == 401){
-                                //     location.href = './login.html';
-                                // }
-                                // toast('Server error');
-                                return
-                            },
-                            dataType : 'json'
-                        });
-
-                    }
+                        checkUser();
+                    }  
                 };
 
+                function checkUser(){
+                    const userId = getQueryString('userId');
+                    const session_id = Cookies.get('session_id');
+                    let bodydata = {
+                        sessionId: session_id,
+                        email: userId,
+                    };
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + 'ecard/checkUser',
+                        data: {'body': bodydata},
+                        success : function(res) {
+                            if(res.code == 1){
+                                getDatas();
+                            }else if(res.code == -1){
+                                sessionStorage.setItem('userId', getQueryString('userId'));
+                                sessionStorage.setItem('backUrl', window.location.href);
+                                window.location.href = './login.html';
+                            }else{
+                                toast(res.msg);
+                                return
+                            }
+                        },
+                        error : function(msg,status) {
+                            toast('Server error');
+                            return
+                        },
+                        dataType : 'json'
+                    });
+                };
+
+                function getDatas(){
+                    const card_num = getQueryString('card_num');
+                    const session_id = Cookies.get('session_id');
+                    let bodydata = {
+                        session_id: session_id,
+                        card_num: card_num,
+                    };
+                    $.ajax({
+                        type : 'post',
+                        url : ajaxurl + 'ecard/selectCardPersonalInfo',
+                        data: {'body': bodydata},
+                        success : function(res) {
+                            // console.log(res);
+                            if(res.code == 1){
+                                if(res.body && !$.isEmptyObject(res.body)){
+                                    allDatas = res.body;
+                                    handleDatas(allDatas);
+                                }
+                            }else if(res.code == 401){
+                                sessionStorage.setItem('backUrl',window.location.href);
+                                sessionStorage.setItem('userId',getQueryString('userId'));
+                                location.href = './login.html';
+                            }else{
+                                // toast(res.msg);
+                                return
+                            }
+                        },
+                        error : function(msg,status) {
+                            // if(status == 401){
+                            //     location.href = './login.html';
+                            // }
+                            // toast('Server error');
+                            return
+                        },
+                        dataType : 'json'
+                    });
+                }
             });
 
         </script>
