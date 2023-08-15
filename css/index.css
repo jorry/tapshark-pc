@@ -127,6 +127,12 @@ input[type="number"]{
 	color: #FFFFFF;
 	margin-bottom: 0.5rem;
 }
+.logo{
+	width: 1.4rem;
+	height: 1.4rem;
+	display: block;
+	margin: 0 auto .5rem;
+}
 .login-cont>p{
 	width: 100%;
 	font-size: 0.28rem;
@@ -282,7 +288,7 @@ input[type="number"]{
 
 /* 注册 */
 .register-cont{
-	padding-top: 0.3rem;
+	padding-top: 0.5rem;
 }
 .register-cont>h1{
 	font-size: 0.68rem;
