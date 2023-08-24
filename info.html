@@ -12,7 +12,7 @@
         <meta name="author" content=""/>
         <meta name="keywords" content=""/>
         <meta name="description" content=""/>
-        <title>E-Card</title>
+        <title>Tapshark</title>
         <link rel="stylesheet" href="./css/index.css?v=1.3">
         <script src="./js/fontSize.js"></script>
         <script src="./js/jquery-3.4.1.min.js"></script>
@@ -45,9 +45,9 @@
 
                 function init(){
                     const session_id = Cookies.get('session_id');
-                    // if(!session_id){
-                    //     location.href = './login.html';
-                    // }
+                    if(!session_id){
+                        location.href = './login.html';
+                    }
                     if(sessionStorage.getItem('backUrl')){
                         sessionStorage.removeItem('userId');
                         sessionStorage.removeItem('backUrl');
@@ -97,13 +97,13 @@
                     }
                     datas.theme = datas.theme ?datas.theme :'#316FFE';
                     $('.info-body,.info-cont').css('background', datas.theme);
-                    if(datas.nick_name && datas.nick_name!='undefined'){
-                        html += '<li class="info-item">'+
-                                    '<span>Nick name</span>'+
-                                    '<p>'+datas.nick_name+'</p>'+
-                                '</li>';
-                        vCards.nickname = datas.nick_name;
-                    }
+                    // if(datas.nick_name && datas.nick_name!='undefined'){
+                    //     html += '<li class="info-item">'+
+                    //                 '<span>Nick name</span>'+
+                    //                 '<p>'+datas.nick_name+'</p>'+
+                    //             '</li>';
+                    //     vCards.nickname = datas.nick_name;
+                    // }
                     if(datas.first_name && datas.first_name!='undefined'){
                         html += '<li class="info-item">'+
                                     '<span>First name</span>'+
@@ -127,7 +127,7 @@
                     }
                     if(datas.role && datas.role!='undefined'){
                         html += '<li class="info-item">'+
-                                    '<span>Role</span>'+
+                                    '<span>Department</span>'+
                                     '<p>'+datas.role+'</p>'+
                                 '</li>';
                         vCards.role = datas.role;
@@ -145,10 +145,12 @@
                                     '<span>'+phone[i].key+'</span>'+
                                     '<p>'+phone[i].value+'</p>'+
                                 '</li>';
-                        if(phone[i].key == 'cell'){
+                        if(phone[i].key == 'Mobile' || phone[i].key == 'Cell'){
                             vCards.cellPhone = phone[i].value;
+                        }else if(phone[i].key == 'Work'){
+                            vCards.workPhone = phone[i].value;
                         }else{
-                            vCards.homePhone = phone[i].value;
+                            vCards.otherPhone = phone[i].value;
                         }
                     };
                     html += '<li class="info-item">'+

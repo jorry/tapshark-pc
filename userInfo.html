@@ -12,11 +12,11 @@
         <meta name="author" content=""/>
         <meta name="keywords" content=""/>
         <meta name="description" content=""/>
-        <title>E-Card</title>
+        <title>Tapshark</title>
         <link rel="stylesheet" href="./css/animate.min.css">
         <link rel="stylesheet" href="./css/mobiscroll.css">
         <link rel="stylesheet" href="./css/mobiscroll_002.css">
-        <link rel="stylesheet" href="./css/index.css?v=1.2">
+        <link rel="stylesheet" href="./css/index.css?v=1.3">
         <script src="./js/fontSize.js"></script>
         <script src="./js/jquery-3.4.1.min.js"></script>
         <script src="./js/cookies.min.js"></script>
@@ -34,12 +34,12 @@
             </div>
             <div class="users-cont">
                 <div class="users-basic">
-                    <input type="text" class="users-nick" placeholder="Nick name">
-                    <input type="text" class="users-first" placeholder="First name">
-                    <input type="text" class="users-last" placeholder="Last name">
-                    <input type="text" class="users-company" placeholder="Company">
-                    <input type="text" class="users-role" placeholder="Role">
-                    <input type="text" class="users-job" placeholder="Job title">
+                    <!-- <input type="text" class="users-nick" placeholder="Nick name"> -->
+                    <div class="users-wrap"><p>First name</p><input type="text" class="users-first" placeholder="First name"></div>
+                    <div class="users-wrap"><p>Last name</p><input type="text" class="users-last" placeholder="Last name"></div>
+                    <div class="users-wrap"><p>Company</p><input type="text" class="users-company" placeholder="Company"></div>
+                    <div class="users-wrap"><p>Department</p><input type="text" class="users-role" placeholder="Department"></div>
+                    <div class="users-wrap"><p>Job title</p><input type="text" class="users-job" placeholder="Job title"></div>
                 </div>
                 <div class="users-box users-nums">
                     <ul class="users-list nums-list"></ul>
@@ -140,11 +140,15 @@
                 const datas = {
                     'phone': [
                         {
-                            name: 'Cell',
+                            name: 'Mobile',
                             onoff: false
                         },
                         {
-                            name: 'Home',
+                            name: 'Work',
+                            onoff: false
+                        },
+                        {
+                            name: 'Other',
                             onoff: false
                         },
                     ],
@@ -419,9 +423,9 @@
                         postDatas.photo_url = $.trim($('.users-head').attr('data-url'));
                     }
                     // nick_name
-                    if($.trim($('.users-nick').val())){
-                        postDatas.nick_name = $.trim($('.users-nick').val());
-                    }
+                    // if($.trim($('.users-nick').val())){
+                    //     postDatas.nick_name = $.trim($('.users-nick').val());
+                    // }
                     // first_name
                     if($.trim($('.users-first').val())){
                         postDatas.first_name = $.trim($('.users-first').val());
@@ -493,10 +497,11 @@
                         }
                     }
                     
-                    // console.log(postDatas);
-                    if(!allDatas){ // 编辑
+                    console.log(postDatas);
+                    // return
+                    if(!allDatas){ // 新增
                         submit(postDatas,'ecard/addCardPersonalInfo');
-                    }else{ // 新增
+                    }else{ // 编辑
                         postDatas.id = allDatas.id;
                         submit(postDatas,'ecard/updateCardPersonalInfo');
                     }
@@ -560,9 +565,9 @@
                         $('.head-img').attr('src', datas.photo_url);
                         $('.head-tips').css('opacity','0');
                     }
-                    if(datas.nick_name && datas.nick_name!='undefined'){
-                        $('.users-nick').val(datas.nick_name);
-                    }
+                    // if(datas.nick_name && datas.nick_name!='undefined'){
+                    //     $('.users-nick').val(datas.nick_name);
+                    // }
                     if(datas.first_name && datas.first_name!='undefined'){
                         $('.users-first').val(datas.first_name);
                     }
@@ -660,7 +665,7 @@
                     if(!session_id){
                         sessionStorage.setItem('backUrl',window.location.href);
                         sessionStorage.setItem('userId',getQueryString('userId'));
-                        location.href = './login.html';
+                        // location.href = './login.html';
                         return
                     }
                     if(sessionStorage.getItem('backUrl')){

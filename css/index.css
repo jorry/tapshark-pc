@@ -838,14 +838,23 @@ input[type="number"]{
 	background-color: white;
 	margin-bottom: 0.8rem;
 }
-.users-basic>input{
+.users-basic>.users-wrap{
 	width: 100%;
-	height: 0.88rem;
+	background-color: white;
+	border-bottom: 1px #DDDDDD solid;
+	padding: 0.2rem 0.3rem 0;
+	box-sizing: border-box;
+}
+.users-basic p{
+	font-size: 0.24rem;
+	color: black;
+}
+.users-basic input{
+	width: 100%;
+	height: 0.68rem;
 	display: block;
 	border: none;
-	border-bottom: 1px #DDDDDD solid;
-	padding: 0 0.3rem;
-	box-sizing: border-box;
+	background-color: white;
 	font-size: 0.28rem;
 	color: #333333;
 	outline: none;
