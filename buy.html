@@ -56,56 +56,66 @@
                     }
                 };
 
+                let onoff = true;
                 $('.buy-btn').click(function(){
-                    const session_id = Cookies.get('session_id');
+                    if(onoff){
 
-                    // if(!session_id){
-                    //     location.href = './login.html';
-                    // }
-                    
-                    const shippingDddress = localStorage.getItem('shipping_address') || '';
-                    const cardInfo = localStorage.getItem('cardInfo') || '';
-                    const orderInfo = localStorage.getItem('orderInfo') || '';
-                    
-                    if(!shippingDddress || !cardInfo || !orderInfo){
-                        toast('请补全信息再提交！');
-                        return
-                    }
+                        onoff = false;
 
-                    const bodydata = {
-                        'cards': JSON.parse(cardInfo), 
-                        'orderInfo': JSON.parse(orderInfo), 
-                        'shipping_address': JSON.parse(shippingDddress),
-                        'session_id': session_id
-                    };
-                    $.ajax({
-                        type : 'post',
-                        url : ajaxurl + 'ecard/orderUpload',
-                        data: {'body': bodydata},
-                        success : function(res) {
-                            console.log(res);
-                            if(res.code == 1){
-                                toast('Submitted successfully！');
-                                setTimeout(()=>{
-                                    localStorage.removeItem('cardInfo');
-                                    localStorage.removeItem('orderInfo');
-                                    localStorage.removeItem('shipping_address');
-                                    window.location.href = './cardList.html';
-                                },1500);
-                            }else{
-                                toast(res.msg);
-                                return
-                            }
-                        },
-                        error : function(msg,status) {
-                            if(status == 401){
-                                location.href = './login.html';
-                            }
-                            toast('Server error');
+                        const session_id = Cookies.get('session_id');
+                        // if(!session_id){
+                        //     location.href = './login.html';
+                        // }
+                        
+                        const shippingDddress = localStorage.getItem('shipping_address') || '';
+                        const cardInfo = localStorage.getItem('cardInfo') || '';
+                        const orderInfo = localStorage.getItem('orderInfo') || '';
+                        
+                        if(!shippingDddress || !cardInfo || !orderInfo){
+                            toast('请补全信息再提交！');
+                            onoff = true;
                             return
-                        },
-                        dataType : 'json'
-                    });
+                        }
+
+                        const bodydata = {
+                            'cards': JSON.parse(cardInfo), 
+                            'orderInfo': JSON.parse(orderInfo), 
+                            'shipping_address': JSON.parse(shippingDddress),
+                            'session_id': session_id
+                        };
+                        
+                        $.ajax({
+                            type : 'post',
+                            url : ajaxurl + 'ecard/orderUpload',
+                            data: {'body': bodydata},
+                            success : function(res) {
+                                // console.log(res);
+                                if(res.code == 1){
+                                    toast('Submitted successfully！');
+                                    setTimeout(()=>{
+                                        localStorage.removeItem('cardInfo');
+                                        localStorage.removeItem('orderInfo');
+                                        localStorage.removeItem('shipping_address');
+                                        window.location.href = './cardList.html';
+                                    },1500);
+                                }else{
+                                    toast(res.msg);
+                                    return
+                                }
+                                onoff = true;
+                            },
+                            error : function(msg,status) {
+                                if(status == 401){
+                                    location.href = './login.html';
+                                }
+                                toast('Server error');
+                                onoff = true;
+                                return
+                            },
+                            dataType : 'json'
+                        });
+                    
+                    }
                 });
 
             })
