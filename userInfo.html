@@ -43,58 +43,58 @@
                 </div>
                 <div class="users-box users-nums">
                     <ul class="users-list nums-list"></ul>
-                    <div class="users-addbox nums-addbox" data-name="phone">
+                    <div class="users-addbox nums-addbox" data-name="Phone">
                         <img class="item-add" src="./imgs/icon-plus@2x.png" alt="">
-                        <p>add phone</p>
+                        <p>Add phone</p>
                     </div>
                 </div>
                 <div class="users-box users-email">
                     <ul class="users-list email-list"></ul>
-                    <div class="email-addbox users-addbox" data-name="email">
+                    <div class="email-addbox users-addbox" data-name="Email">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>add email</p>
+                        <p>Add email</p>
                     </div>
                 </div>
                 <div class="users-box users-url">
                     <ul class="users-list url-list"></ul>
-                    <div class="address-addbox users-addbox" data-name="url">
+                    <div class="address-addbox users-addbox" data-name="Url">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>add url</p>
+                        <p>Add url</p>
                     </div>
                 </div>
                 <div class="users-box users-address">
                     <ul class="users-list address-list"></ul>
-                    <div class="address-addbox users-addbox" data-name="address">
+                    <div class="address-addbox users-addbox" data-name="Address">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>add address</p>
+                        <p>Add address</p>
                     </div>
                 </div>
                 <div class="users-box users-birthday">
                     <ul class="users-list birthday-list"></ul>
-                    <div class="birthday-addbox users-addbox" data-name="birthday">
+                    <div class="birthday-addbox users-addbox" data-name="Birthday">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>add birthday</p>
+                        <p>Add birthday</p>
                     </div>
                 </div>
-                <div class="users-box users-date">
+                <div class="users-box users-date" style="display: none;">
                     <ul class="users-list date-list"></ul>
-                    <div class="date-addbox users-addbox" data-name="date">
+                    <div class="date-addbox users-addbox" data-name="Date">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>add date</p>
+                        <p>Add date</p>
                     </div>
                 </div>
                 <div class="users-box users-social">
                     <ul class="users-list social-list"></ul>
-                    <div class="social-addbox users-addbox" data-name="social">
+                    <div class="social-addbox users-addbox" data-name="Social">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>add social profile</p>
+                        <p>Add social profile</p>
                     </div>
                 </div>
                 <div class="users-box users-instant">
                     <ul class="users-list instant-list"></ul>
-                    <div class="instant-addbox users-addbox" data-name="instant">
+                    <div class="instant-addbox users-addbox" data-name="Instant">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>add instant message</p>
+                        <p>Add instant message</p>
                     </div>
                 </div>
             </div>
@@ -275,7 +275,7 @@
                 $(document).on('click','.item-tit',function(){
                     const name = $(this).closest('li').attr('data-name');
                     const index = $(this).closest('li').index();
-                    if(name=='phone' || name=='instant' || name=='social'){
+                    if(name=='Phone' || name=='Instant' || name=='Social'){
                         const addDatas = datas[name];
                         let isAll = false;
                         for(let j=0;j<addDatas.length;j++){
@@ -318,7 +318,7 @@
                 $(document).on('click','.item-del',function(){
                     const itemli = $(this).closest('li');
                     const name = itemli.attr('data-name');
-                    if(name=='phone' || name=='instant' || name=='social'){
+                    if(name=='Phone' || name=='Instant' || name=='Social'){
                         let addDatas = datas[name];
                         for(let j=0;j<addDatas.length;j++){
                             if(addDatas[j].name == itemli.find('.item-text').text()){
@@ -540,21 +540,21 @@
                         instant = datas.instant_message.split('*');
                     }
                     
-                    addHtml('email',datas.email);
+                    addHtml('Email',datas.email);
                     for(let i=0;i<phone.length;i++){
                         phone[i] = JSON.parse(phone[i]);
-                        addHtml('phone', phone[i].value, phone[i].key);
+                        addHtml('Phone', phone[i].value, phone[i].key);
                     };
                     if(social.length>0){
                         for(let i=0;i<social.length;i++){
                             social[i] = JSON.parse(social[i]);
-                            addHtml('social', social[i].value, social[i].name);
+                            addHtml('Social', social[i].value, social[i].name);
                         };
                     }
                     if(instant.length>0){
                         for(let i=0;i<instant.length;i++){
                             instant[i] = JSON.parse(instant[i]);
-                            addHtml('instant', instant[i].value, instant[i].name);
+                            addHtml('Instant', instant[i].value, instant[i].name);
                         };
                     }
                     if(datas.theme && datas.theme!='undefined'){
@@ -585,16 +585,16 @@
                     }
                     
                     if(datas.url && datas.url!='undefined'){
-                        addHtml('url',datas.url);
+                        addHtml('Url',datas.url);
                     }
                     if(datas.address && datas.address!='undefined'){
-                        addHtml('address',datas.address);
+                        addHtml('Address',datas.address);
                     }
                     if(datas.birthday && datas.birthday!='undefined'){
-                        addHtml('birthday',datas.birthday);
+                        addHtml('Birthday',datas.birthday);
                     }
                     if(datas.date && datas.date!='undefined'){
-                        addHtml('date',datas.date);
+                        addHtml('Date',datas.date);
                     }
                     
                 };
@@ -606,7 +606,7 @@
                     let nametext = name;
                     let lihtml = '';
                     userList.attr('data-name',name);
-                    if(name=='phone' || name=='instant' || name=='social'){
+                    if(name=='Phone' || name=='Instant' || name=='Social'){
                         const addDatas = datas[name];
                         if(text){
                             for(let j=0;j<addDatas.length;j++){
@@ -639,7 +639,7 @@
                                         '<input class="item-val" type="text" placeholder="'+nametext+'" value="'+title+'">'+
                                     '</li>';
                         userList.append(lihtml);
-                    }else if(name=='birthday' || name == 'date'){
+                    }else if(name=='Birthday' || name == 'Date'){
                         that.hide();
                         lihtml = '<li class="users-item" data-name="'+name+'">'+
                                         '<img class="item-del" src="./imgs/icon-reduce@2x.png" alt="">'+
