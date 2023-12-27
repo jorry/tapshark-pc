@@ -152,7 +152,7 @@
                         contentType: false,
                         success : function(res) {
                             console.log(res);
-                            if(res.body){
+                            if(res.code == 1 && res.body){
                                 const logoimg = res.body.imgUrl;
                                 if(idx == 1){
                                     $('.company-logo').attr('src',logoimg);
@@ -163,6 +163,8 @@
                                     $('.other-img').attr('src',logoimg).show();
                                     $('.upload-other>.add-box').hide();
                                 }
+                            }else if(res.code == 0){
+                                toast(res.msg);
                             }
                         },
                         error : function(msg) {

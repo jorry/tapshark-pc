@@ -45,9 +45,9 @@
 
                 function init(){
                     const session_id = Cookies.get('session_id');
-                    if(!session_id){
-                        location.href = './login.html';
-                    }
+                    // if(!session_id){
+                    //     location.href = './login.html';
+                    // }
                     if(sessionStorage.getItem('backUrl')){
                         sessionStorage.removeItem('userId');
                         sessionStorage.removeItem('backUrl');

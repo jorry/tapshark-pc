@@ -45,56 +45,56 @@
                     <ul class="users-list nums-list"></ul>
                     <div class="users-addbox nums-addbox" data-name="Phone">
                         <img class="item-add" src="./imgs/icon-plus@2x.png" alt="">
-                        <p>Add phone</p>
+                        <p>add phone</p>
                     </div>
                 </div>
                 <div class="users-box users-email">
                     <ul class="users-list email-list"></ul>
                     <div class="email-addbox users-addbox" data-name="Email">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>Add email</p>
+                        <p>add email</p>
                     </div>
                 </div>
                 <div class="users-box users-url">
                     <ul class="users-list url-list"></ul>
                     <div class="address-addbox users-addbox" data-name="Url">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>Add url</p>
+                        <p>add url</p>
                     </div>
                 </div>
                 <div class="users-box users-address">
                     <ul class="users-list address-list"></ul>
                     <div class="address-addbox users-addbox" data-name="Address">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>Add address</p>
+                        <p>add address</p>
                     </div>
                 </div>
                 <div class="users-box users-birthday">
                     <ul class="users-list birthday-list"></ul>
                     <div class="birthday-addbox users-addbox" data-name="Birthday">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>Add birthday</p>
+                        <p>add birthday</p>
                     </div>
                 </div>
-                <div class="users-box users-date" style="display: none;">
+                <!-- <div class="users-box users-date">
                     <ul class="users-list date-list"></ul>
                     <div class="date-addbox users-addbox" data-name="Date">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>Add date</p>
+                        <p>add date</p>
                     </div>
-                </div>
+                </div> -->
                 <div class="users-box users-social">
                     <ul class="users-list social-list"></ul>
                     <div class="social-addbox users-addbox" data-name="Social">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>Add social profile</p>
+                        <p>add social profile</p>
                     </div>
                 </div>
                 <div class="users-box users-instant">
                     <ul class="users-list instant-list"></ul>
                     <div class="instant-addbox users-addbox" data-name="Instant">
                         <img src="./imgs/icon-plus@2x.png" alt="">
-                        <p>Add instant message</p>
+                        <p>add instant message</p>
                     </div>
                 </div>
             </div>
@@ -138,7 +138,7 @@
             $(function(){
 
                 const datas = {
-                    'phone': [
+                    'Phone': [
                         {
                             name: 'Mobile',
                             onoff: false
@@ -152,7 +152,7 @@
                             onoff: false
                         },
                     ],
-                    'instant': [
+                    'Instant': [
                         {
                             name: 'Teams',
                             onoff: false
@@ -198,7 +198,7 @@
                             onoff: false
                         },
                     ],
-                    'social': [
+                    'Social': [
                         {
                             name: 'Facebook',
                             onoff: false
@@ -339,6 +339,7 @@
 
                 // 初始化日期组件
                 function dateInit(name){
+                    name = name.toLowerCase();
                     let opt={};
                     opt.date = {preset : 'date'};
                     opt.default = {
@@ -459,9 +460,9 @@
                         postDatas.birthday = $.trim($('.birthday-list>li').eq(0).find('.item-val').val());
                     }
                     // date
-                    if($('.date-list>li').length>0 && $.trim($('.date-list>li').eq(0).find('.item-val').val())){
-                        postDatas.date = $.trim($('.date-list>li').eq(0).find('.item-val').val());
-                    }
+                    // if($('.date-list>li').length>0 && $.trim($('.date-list>li').eq(0).find('.item-val').val())){
+                    //     postDatas.date = $.trim($('.date-list>li').eq(0).find('.item-val').val());
+                    // }
                     // social_profile
                     if($('.social-list>li').length>0){
                         let socialArr = [], socialLi = $('.social-list>li');
@@ -593,9 +594,9 @@
                     if(datas.birthday && datas.birthday!='undefined'){
                         addHtml('Birthday',datas.birthday);
                     }
-                    if(datas.date && datas.date!='undefined'){
-                        addHtml('Date',datas.date);
-                    }
+                    // if(datas.date && datas.date!='undefined'){
+                    //     addHtml('Date',datas.date);
+                    // }
                     
                 };
                 
@@ -665,8 +666,8 @@
                     if(!session_id){
                         sessionStorage.setItem('backUrl',window.location.href);
                         sessionStorage.setItem('userId',getQueryString('userId'));
-                        // location.href = './login.html';
-                        return
+                        location.href = './login.html';
+                        // return
                     }
                     if(sessionStorage.getItem('backUrl')){
                         sessionStorage.removeItem('backUrl');
